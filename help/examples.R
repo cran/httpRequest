@@ -14,8 +14,8 @@ test2 <- list(
            ,"upsa"="test"
            )
            print(test2)
-PostToHost("127.0.0.1","/cgi-bin/param_list.pl",test2,referer="www.test.de",port=port)
-
+res<-postToHost("www.molgen.mpg.de","/~wolski/test.php4",test2,referer="www.test.pl",port=port)
+cat(res)
 
 ##==============================================================
 ## SimplePostToHost
@@ -24,11 +24,15 @@ PostToHost("127.0.0.1","/cgi-bin/param_list.pl",test2,referer="www.test.de",port
 
 port <- 80
 data = "pid=14&poll_vote_number=2";
-SimplePostToHost("127.0.0.1","/cgi-bin/param_list.pl","http://www.linux.com/polls/index.phtml?pid=1415",data,port=port)
+simplePostToHost("www.molgen.mpg.de","/~wolski/test.php4","",data,port=port)
+
+
 
 
 ##==============================================================
-## GetToHost.
+## getToHost.
 ##==============================================================
 port <- 80
-GetToHost("www.spiegel.de","index.html","www.test.pl",port=port)
+
+getToHost("www.molgen.mpg.de","/~wolski/test.php4?test=test1&test2=test2&test3=3","www.test.pl",port=port)
+

@@ -1,11 +1,11 @@
-\name{SimplePostToHost}
-\alias{SimplePostToHost}
+\name{simplePostToHost}
+\alias{simplePostToHost}
 \title{Sends Simple Post Request to HTTP Server (host)}
 \description{
   Sends Post Request to HTTP Server
 }
 \usage{
-        SimplePostToHost(host, path, referer, datatosend,port=80)
+        simplePostToHost(host, path, referer, datatosend,port=80)
 }
 \arguments{
   \item{host}{The host to which to send the Request eg.: www.spiegel.de, localhost}
@@ -25,8 +25,6 @@ and \code{http://www.w3.org/Protocols/rfc1341/0_TableOfContents.html}
 \examples{
 port <- 80
 data = "pid=14&poll_vote_number=2";
-#SimplePostToHost("127.0.0.1","/cgi-bin/param_list.pl","http://www.linux.com/polls/index.phtml?pid=1415",data,port=port)
-
-#for sample code look in the help directory of the package
+simplePostToHost("www.molgen.mpg.de","/~wolski/test.php4","",data,port=port)
 }
 \keyword{misc}

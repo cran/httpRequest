@@ -4,27 +4,33 @@
 ## multipartpost
 ##==================================================================
 
-PostToHost <- function(host,path,dataTosend,referer="",port=80)
+postToHost <- function(host,path,dataTosend,referer="",port=80)
 {
-  dc <- 0;
-  bo <- NULL
+  if(missing(path))
+    path <- "/"
+  if(missing(dataTosend))
+    stop("No data to send provided")
+  if(!inherits(dataTosend,"list"))
+    stop("Data to send have to be a list")
+
+  dc <- 0; #counter for strings
+                                        #make border
   xx <- as.integer(runif(10,min=1,max=10))
-  for(y in xx)
-  {
-    bo <- paste(bo,y,sep="")
-  }
+  bo<-paste(xx,collapse="")
   bo <- paste("xxx",bo,sep="")
   bol <- "--"
-  fp <- make.socket(host=host, port=port,server=FALSE,fail=TRUE)
-  mypost <- NULL
-  mypost <- c(mypost,paste("POST ",path," HTTP/1.1\n",sep=""))
-  mypost <- c(mypost,paste("Host: ",host,"\n",sep=""))
-  mypost <- c(mypost,"Connection: Keep-Alive\n")
-  mypost <- c(mypost,paste("Referer: ",referer,"\n",sep=""))
-  mypost <- c(mypost,"User-Agent: Mozilla/4.05C-SGI [en] (X11; I; IRIX 6.5 IP22)\n")
-  mypost <- c(mypost,"Accept: */*\n")
-  mypost <- c(mypost,paste("Content-type: multipart/form-data; boundary=",bo,"\n",sep=""))
+
+  header <- NULL
+  header <- c(header,paste("POST ",path," HTTP/1.1\n",sep=""))
+  header <- c(header,paste("Host: ",host,"\n",sep=""))
+  header <- c(header,"Connection: Keep-Alive\n")
+  header <- c(header,paste("Referer: ",referer,"\n",sep=""))
+  header <- c(header,"User-Agent: Mozilla/4.05C-SGI [en] (X11; I; IRIX 6.5 IP22)\n")
+  header <- c(header,"Accept: */*\n")
+  header <- c(header,paste("Content-type: multipart/form-data; boundary=",bo,"\n",sep=""))
+  
   mcontent <- NULL # ceeps the content.
+  
   for(x in 1:length(dataTosend))
     {
       val <- dataTosend[[x]]
@@ -35,20 +41,19 @@ PostToHost <- function(host,path,dataTosend,referer="",port=80)
     }
   
   dc <- dc + length(strsplit(bo,"")[[1]])+length(strsplit(bol,"")[[1]])+4;
-  mypost <- c(mypost,paste("Content-length: ",dc,"\n\n",sep=""))
-  mypost <- c(mypost,mcontent)
+  header <- c(header,paste("Content-length: ",dc,"\n\n",sep=""))
+  mypost <- c(header,mcontent); rm(header,mcontent)
   mypost <- c(mypost,paste(bol,bo,"--\n\n",sep=""))
-  for(x in 1:length(mypost))
-    {
-      write.socket(fp,mypost[x])
-    }
+  mypost<-paste(mypost,collapse="")
 
+  fp <- make.socket(host=host, port=port,server=FALSE,fail=TRUE)
+  write.socket(fp,mypost)
   output <- character(0)
   repeat{
     ss <- read.socket(fp,loop=FALSE)
     output <- paste(output,ss,sep="")
     if(regexpr("\r\n0\r\n\r\n",ss)>-1) break()
-    if (ss == "") break()
+    if(ss == "") break()
   }
   close.socket(fp)
   return(output)
@@ -58,24 +63,28 @@ PostToHost <- function(host,path,dataTosend,referer="",port=80)
 ## GET
 ##================================================================
 
-GetToHost <- function(host,path,referer,port=80)
+getToHost <- function(host,path,referer,port=80)
 {
+  if(missing(path))
+    path<-"/"
+  if(missing(referer))
+    referer<-""
+  
   fp <- make.socket(host=host, port=port,server=FALSE)
-  write.socket(fp,paste("GET ",path," HTTP/1.1\n",sep=""))
-  write.socket(fp,"Accept: text/html\n")
-  #write.socket(fp,"Accept-Language: en-us\n")
-  write.socket(fp,"Keep-Alive: timeout=15, max=100")
-  write.socket(fp,"Connection: Keep-Alive\n")
-  write.socket(fp,paste("Host: ",host,"\n",sep=""))
-  #write.socket(fp,"User-Agent: Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0\n")
-  ref <- paste("Referer: ",referer,"\n\n",sep="")
-  #print(ref)
-  write.socket(fp,ref)
+  header <- character(0)
+  header <- c(header,paste("GET ",path," HTTP/1.1\n",sep=""))
+  header <- c(header,paste("Host: ",host,"\n",sep=""))
+  header <- c(header,"Connection: Keep-Alive\n")
+  header <- c(header,paste("Referer: ",referer,"\n",sep=""))
+  header <- c(header,"User-Agent: Mozilla/4.05C-SGI [en] (X11; I; IRIX 6.5 IP22)\n")
+  header <- c(header,"Accept: */*\n\n")
+  tmp<-paste(header,collapse="")
+
+  write.socket(fp,tmp)
   output <- character(0)
   #int <- 1
   repeat{
     ss <- read.socket(fp,loop=FALSE)
-    #print(ss)
     output <- paste(output,ss,sep="")
     if(regexpr("\r\n0\r\n\r\n",ss)>-1) break()
     if (ss == "") break()
@@ -85,50 +94,45 @@ GetToHost <- function(host,path,referer,port=80)
 }
 
 ##================================================================
-## Simple post
+## Simple Post
 ##================================================================
 
-
-SimplePostToHost<-function(host, path, referer, datatosend,port=80) {
-  fp <- make.socket(host=host, port=port,server=FALSE)
-  write.socket(fp, paste("POST ",path," HTTP/1.1\n",sep=""))
-  write.socket(fp, paste("Host: ",host,"\n",sep=""))
-  write.socket(fp,paste("Referer: ",referer,"\n",sep=""))
-  write.socket(fp, "Content-type: application/x-www-form-urlencoded\n");
-  write.socket(fp, paste("Content-length: ",length(strsplit(datatosend,"")[[1]]),"\n"));
-  write.socket(fp, "Connection: Keep-Alive\n\n");
-  write.socket(fp, paste(datatosend,"\n",sep=""));
- 
-  output <- character(0)
-  repeat{
-    ss <- read.socket(fp,loop=FALSE)
-    #print(ss)
-    output <- paste(output,ss,sep="")
-    if(regexpr("\r\n0\r\n\r\n",ss)>-1) break()
-    if (ss == "") break
+simplePostToHost<-function(host,path,referer,datatosend,port=80)
+  {
+    if(!missing(datatosend))
+      {
+        lengthdatatosend <- length( strsplit(datatosend,"")[[1]])
+        datatosend <- paste(datatosend,"\n",sep="")
+      }
+    else
+      {
+        datatosend<-character(0)
+        lengthdatatosend <- 0
+      }
+    if(missing(path)) path<-"/"
+    if(missing(referer)) referer <- ""
+    #make the header
+    header<-character(0)
+    header<-c(header,    paste("POST ",path," HTTP/1.1\n",sep=""))
+    header<-c(header,    paste("Host: ",host,"\n",sep=""))
+    header<-c(header,    paste("Referer: ",referer,"\n",sep=""))
+    header<-c(header,    "Content-type: application/x-www-form-urlencoded\n")
+    header<-c(header,    paste("Content-length: ",lengthdatatosend,"\n"))
+    header<-c(header,    "Connection: Keep-Alive\n\n")
+    #add the data.
+    header <- paste(c(header,datatosend), collapse="")
+    ##establish the connection.
+    fp <- make.socket(host=host, port=port,server=FALSE)
+    write.socket(fp,header)
+    output <- character(0)
+    #read as long there is nothing more to read.
+    repeat
+      {
+        ss <- read.socket(fp,loop=FALSE)
+        output <- paste(output,ss,sep="")
+        if(regexpr("\r\n0\r\n\r\n",ss)>-1) break();
+        if (ss == "") break();
+      }
+    close.socket(fp)
+    return(output)
   }
-  close.socket(fp)
-  return(output)
-}
-
-
-#simplsock<-function(filename,host,port)
-#{
-#  test <- readLines(filename)
-#  fp <- make.socket(host=host, port=port,server=FALSE,fail=FALSE)
-#  
-#  for(x in test)
-#  {
-#    write.socket(fp,x)
-#  }
-#  output <- character(0)
-#  repeat{
-#    ss <- read.socket(fp)
-#    if (ss == "") break#
-    #print(ss)
- #   output <- paste(output,ss,sep="\n")
- # }
- # close.socket(fp)
- # return(output)
-#}
-

@@ -1,11 +1,11 @@
-\name{GetToHost}
-\alias{GetToHost}
+\name{getToHost}
+\alias{getToHost}
 \title{Sends Get Request to HTTP Server (host)}
 \description{
   Sends Get Request to HTTP Server
 }
 \usage{
-GetToHost(host,path,referer,port=80)
+getToHost(host,path,referer,port=80)
 }
 \arguments{
 \item{host}{The host to which to send the Request eg.: www.spiegel.de, 127.0.01}
@@ -22,8 +22,7 @@ and \code{http://www.w3.org/Protocols/rfc1341/0_TableOfContents.html}
 \author{E.W.Wolski wolski@molgen.mpg.de}
 \seealso{}
 \examples{
-#GetToHost("www.spiegel.de","index.html","www.test.pl",port=port)
-
-#for sample code look in the help directory of the package
+port<-80
+getToHost("www.molgen.mpg.de","/~wolski/test.php4?test=test1&test2=test2&test3=3","www.test.pl",port=port)
 }
 \keyword{misc}

@@ -1,6 +1,6 @@
 Package: httpRequest
-Version: 0.0.3  
-Date: 2004-2-20
+Version: 0.0.4 
+Date: 2004-3-3
 Title: Basic HTTP Request
 Author: Eryk Witold Wolski
 Maintainer: Eryk Witold Wolski <wolski@molgen.mpg.de>

@@ -15,11 +15,18 @@
   \item{port}{its 80 or 8080 most frequently}
 }
 \value{The document which the server returns as a string.}
-\details{For details see e.g. perl HTTP::Request::Common documentation.
+\details{
+It is a simple http client. So it does not take care of special chars e.g. whitspaces.
+For details see e.g. perl HTTP::Request::Common documentation.
+and \code{http://www.w3.org/Protocols/rfc1341/0_TableOfContents.html}
 }
 \author{E.W.Wolski wolski@molgen.mpg.de}
 \seealso{}
 \examples{
+port <- 80
+data = "pid=14&poll_vote_number=2";
+#SimplePostToHost("127.0.0.1","/cgi-bin/param_list.pl","http://www.linux.com/polls/index.phtml?pid=1415",data,port=port)
+
 #for sample code look in the help directory of the package
 }
 \keyword{misc}

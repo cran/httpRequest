@@ -14,7 +14,7 @@ PostToHost <- function(host,path,dataTosend,referer="",port=80)
     bo <- paste(bo,y,sep="")
   }
   bo <- paste("xxx",bo,sep="")
-  bol <- "---------------"
+  bol <- "--"
   fp <- make.socket(host=host, port=port,server=FALSE,fail=TRUE)
   mypost <- NULL
   mypost <- c(mypost,paste("POST ",path," HTTP/1.1\n",sep=""))
@@ -33,6 +33,7 @@ PostToHost <- function(host,path,dataTosend,referer="",port=80)
       dc <- dc + length(strsplit(ds,"")[[1]])
       mcontent <- c(mcontent,ds)
     }
+  
   dc <- dc + length(strsplit(bo,"")[[1]])+length(strsplit(bol,"")[[1]])+4;
   mypost <- c(mypost,paste("Content-length: ",dc,"\n\n",sep=""))
   mypost <- c(mypost,mcontent)
@@ -41,6 +42,7 @@ PostToHost <- function(host,path,dataTosend,referer="",port=80)
     {
       write.socket(fp,mypost[x])
     }
+
   output <- character(0)
   repeat{
     ss <- read.socket(fp,loop=FALSE)

@@ -17,11 +17,23 @@ PostToHost(host,path,dataTosend,referer="",port=80)
 }
 
 \value{The document which the server returns as a string.}
-\details{For details see e.g. perl HTTP::Request::Common documentation.
+\details{
+It is a simple http client. So it does not take care of special chars e.g. whitspaces.
+For details see e.g. perl HTTP::Request::Common documentation.
+and \code{http://www.w3.org/Protocols/rfc1341/0_TableOfContents.html}
+
 }
 \author{E.W.Wolski wolski@molgen.mpg.de}
 \seealso{}
 \examples{
+port <- 80
+test2 <- list(
+            "fruit"="apple"
+           ,"dat_defs"="20021204/F113213.dat"
+           ,"upsa"="test"
+           )
+           print(test2)
+#PostToHost("127.0.0.1","/cgi-bin/param_list.pl",test2,referer="www.test.de",port=port)
 #for sample code look in the help directory of the package
 }
 

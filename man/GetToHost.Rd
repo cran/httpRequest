@@ -15,11 +15,15 @@ GetToHost(host,path,referer,port=80)
 }
 \value{The document which the server returns as a string.}
 \details{
+It is a simple http client. So it does not take care of special chars e.g. whitspaces.
 For details see e.g. perl HTTP::Request::Common documentation.
+and \code{http://www.w3.org/Protocols/rfc1341/0_TableOfContents.html}
 }
 \author{E.W.Wolski wolski@molgen.mpg.de}
 \seealso{}
 \examples{
+#GetToHost("www.spiegel.de","index.html","www.test.pl",port=port)
+
 #for sample code look in the help directory of the package
 }
 \keyword{misc}

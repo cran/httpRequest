@@ -27,14 +27,14 @@ and \code{http://www.w3.org/Protocols/rfc1341/0_TableOfContents.html}
 \seealso{postObjectToHost}
 \examples{
 
-port <- 80
-test2 <- list(
-            "fruit"="apple"
-           ,"dat_defs"="20021204/F113213.dat"
-           ,"upsa"="test"
-           )
-
-postToHost("www.molgen.mpg.de","/~wolski/test.php4",test2,referer="www.test.de",port=port)
+#to test uncomment. First check that the host ist running.
+#port <- 80
+#test2 <- list(
+#            "fruit"="apple"
+#           ,"dat_defs"="20021204/F113213.dat"
+#           ,"upsa"="test"
+#           )
+#postToHost("www.molgen.mpg.de","/~wolski/test.php4",test2,referer="www.test.de",port=port)
 }
 
 \keyword{misc}

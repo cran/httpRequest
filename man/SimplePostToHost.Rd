@@ -23,8 +23,9 @@ and \code{http://www.w3.org/Protocols/rfc1341/0_TableOfContents.html}
 \author{E.W.Wolski wolski@molgen.mpg.de}
 \seealso{}
 \examples{
-port <- 80
-data = "pid=14&poll_vote_number=2";
-simplePostToHost("www.molgen.mpg.de","/~wolski/test.php4","",data,port=port)
+#before you use the example check that the server www.molgen.mpg.de is running.
+#port <- 80
+#data = "pid=14&poll_vote_number=2";
+#simplePostToHost("www.molgen.mpg.de","/~wolski/test.php4","",data,port=port)
 }
 \keyword{misc}

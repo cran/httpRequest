@@ -37,19 +37,16 @@ PostToHost <- function(host,path,dataTosend,referer="",port=80)
   mypost <- c(mypost,paste("Content-length: ",dc,"\n\n",sep=""))
   mypost <- c(mypost,mcontent)
   mypost <- c(mypost,paste(bol,bo,"--\n\n",sep=""))
-  #print(mypost)
   for(x in 1:length(mypost))
     {
-      #writeLines(mypost[x], con = testf , sep="")
       write.socket(fp,mypost[x])
     }
   output <- character(0)
   repeat{
-    ss <- read.socket(fp)
+    ss <- read.socket(fp,loop=FALSE)
+    output <- paste(output,ss,sep="")
     if(regexpr("\r\n0\r\n\r\n",ss)>-1) break()
     if (ss == "") break()
-    #writeLines(ss,con=testf,sep="")
-    output <- paste(output,ss,sep="")
   }
   close.socket(fp)
   return(output)
@@ -65,7 +62,8 @@ GetToHost <- function(host,path,referer,port=80)
   write.socket(fp,paste("GET ",path," HTTP/1.1\n",sep=""))
   write.socket(fp,"Accept: text/html\n")
   #write.socket(fp,"Accept-Language: en-us\n")
-  #write.socket(fp,"Connection: Keep-Alive\n")
+  write.socket(fp,"Keep-Alive: timeout=15, max=100")
+  write.socket(fp,"Connection: Keep-Alive\n")
   write.socket(fp,paste("Host: ",host,"\n",sep=""))
   #write.socket(fp,"User-Agent: Mozilla/4.0 (compatible; MSIE 5.5; Windows NT 5.0\n")
   ref <- paste("Referer: ",referer,"\n\n",sep="")
@@ -74,12 +72,11 @@ GetToHost <- function(host,path,referer,port=80)
   output <- character(0)
   #int <- 1
   repeat{
-    ss <- read.socket(fp)
-    #print(ss)
-    if(regexpr("\r\n0\r\n\r\n",ss)>-1) break()
-    if (ss == "") break()
+    ss <- read.socket(fp,loop=FALSE)
     #print(ss)
     output <- paste(output,ss,sep="")
+    if(regexpr("\r\n0\r\n\r\n",ss)>-1) break()
+    if (ss == "") break()
   }
   close.socket(fp)
   return(output)
@@ -97,16 +94,16 @@ SimplePostToHost<-function(host, path, referer, datatosend,port=80) {
   write.socket(fp,paste("Referer: ",referer,"\n",sep=""))
   write.socket(fp, "Content-type: application/x-www-form-urlencoded\n");
   write.socket(fp, paste("Content-length: ",length(strsplit(datatosend,"")[[1]]),"\n"));
-  write.socket(fp, "Connection: close\n\n");
+  write.socket(fp, "Connection: Keep-Alive\n\n");
   write.socket(fp, paste(datatosend,"\n",sep=""));
  
   output <- character(0)
   repeat{
-    ss <- read.socket(fp)
-    if(regexpr("\r\n0\r\n\r\n",ss)>-1) break()
-    if (ss == "") break
+    ss <- read.socket(fp,loop=FALSE)
     #print(ss)
     output <- paste(output,ss,sep="")
+    if(regexpr("\r\n0\r\n\r\n",ss)>-1) break()
+    if (ss == "") break
   }
   close.socket(fp)
   return(output)

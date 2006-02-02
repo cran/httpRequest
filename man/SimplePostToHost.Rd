@@ -5,7 +5,7 @@
   Sends Post Request to HTTP Server
 }
 \usage{
-        simplePostToHost(host, path, referer, datatosend,port=80)
+        simplePostToHost(host, path, referer, datatosend, port=80)
 }
 \arguments{
   \item{host}{The host to which to send the Request eg.: www.spiegel.de, localhost}
@@ -21,7 +21,7 @@ For details see e.g. perl HTTP::Request::Common documentation.
 and \code{http://www.w3.org/Protocols/rfc1341/0_TableOfContents.html}
 }
 \author{E.W.Wolski wolski@molgen.mpg.de}
-\seealso{}
+\seealso{getToHost, postToHost}
 \examples{
 #before you use the example check that the server www.molgen.mpg.de is running.
 #port <- 80

@@ -1,4 +1,3 @@
 getToHost               Sends Get Request to HTTP Server (host)
 postToHost              Sends Multiform Post Request to HTTP Server
-simplePostToHost        Sends Simple Post Request to HTTP Server
-                        (host)
+simplePostToHost        Sends Simple Post Request to HTTP Server (host)

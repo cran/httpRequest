@@ -8,7 +8,7 @@
 getToHost(host,path,referer,port=80)
 }
 \arguments{
-\item{host}{The host to which to send the Request eg.: www.spiegel.de, 127.0.01}
+\item{host}{The host to which to send the Request e. g.: www.spiegel.de, 127.0.0.1}
 \item{path}{The path to the file eg. /cgi/getpasswords.pl?test=best or /index.html}
 \item{referer}{something like www.myhome.org}
 \item{port}{its 80 or 8080 most frequently}
@@ -20,7 +20,7 @@ For details see e.g. perl HTTP::Request::Common documentation.
 and \code{http://www.w3.org/Protocols/rfc1341/0_TableOfContents.html}
 }
 \author{E.W.Wolski wolski@molgen.mpg.de}
-\seealso{}
+\seealso{postToHost, simplePostToHost}
 \examples{
 #check first if www.molgen.mpg.de is running.
 #port<-80

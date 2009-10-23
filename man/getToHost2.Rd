@@ -1,11 +1,11 @@
-\name{getToHost}
-\alias{getToHost}
-\title{Sends Get Request to HTTP Server (host)}
+\name{getToHost2}
+\alias{getToHost2}
+\title{Sends Get Request to HTTP Server (host) with raw contents}
 \description{
-  Sends Get Request to HTTP Server
+  Sends Get Request to HTTP Server (experimental version of getToHost based on raw data type)
 }
 \usage{
-getToHost(host,path,referer,port=80)
+getToHost2(host,path,referer,port=80)
 }
 \arguments{
 \item{host}{The host to which to send the Request e. g.: www.spiegel.de, 127.0.0.1}
@@ -21,10 +21,10 @@ and\cr
 \code{http://www.w3.org/Protocols/rfc1341/0_TableOfContents.html}
 }
 \author{E.W.Wolski wolski@molgen.mpg.de}
-\seealso{postToHost, simplePostToHost}
+\seealso{getToHost}
 \examples{
 #check first if www.molgen.mpg.de is running.
 #port<-80
-#getToHost("www.molgen.mpg.de","/~wolski/test.php4?test=test1&test2=test2&test3=3",
+#getToHost2("www.molgen.mpg.de","/~wolski/test.php4?test=test1&test2=test2&test3=3",
 #        "www.test.pl",port=port)
 }

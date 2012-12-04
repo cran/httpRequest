@@ -1,5 +1,4 @@
 getToHost               Sends Get Request to HTTP Server (host)
-getToHost2              Sends Get Request to HTTP Server (host) with
-                        raw contents
+getToHost2              Sends Get Request to HTTP Server (host) with raw contents
 postToHost              Sends Multiform Post Request to HTTP Server
 simplePostToHost        Sends Simple Post Request to HTTP Server (host)

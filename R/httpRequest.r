@@ -76,7 +76,7 @@ postToHost <- function(host, path, data.to.send, referer, port=80, ua, accept,
 		mcontent <- c(mcontent,ds)
 	}
 
-	dc <- dc + length(strsplit(bo,"")[[1]])+4;
+	dc <- dc + length(charToRaw(bo))+4;
 	header <- c(header,paste("Content-Length: ",dc,"\r\n\r\n",sep=""))
 	mypost <- c(charToRaw(paste(header, collapse="")),mcontent,
 		charToRaw(paste(bo,"--\r\n",sep="")))
@@ -90,9 +90,8 @@ postToHost <- function(host, path, data.to.send, referer, port=80, ua, accept,
 	repeat{
 		ss <- rawToChar(readBin(scon, "raw", 2048))
 		output <- paste(output,ss,sep="")
-		if(regexpr("\r\n0\r\n\r\n",ss)>-1) break()
-		if(ss == "") break()
-		#if(proc.time()[3] > start+timeout) break()
+		if(regexpr("\r\n0\r\n\r\n",ss)>-1) break
+		if(ss == "") break
 	}
 	close(scon)
 	return(output)
@@ -125,8 +124,8 @@ getToHost <- function(host,path,referer,port=80)
   repeat{
     ss <- read.socket(fp,loop=FALSE)
     output <- paste(output,ss,sep="")
-    if(regexpr("\r\n0\r\n\r\n",ss)>-1) break()
-    if (ss == "") break()
+    if(regexpr("\r\n0\r\n\r\n",ss)>-1) break
+    if (ss == "") break
   }
   close.socket(fp)
   return(output)
@@ -155,9 +154,8 @@ getToHost2 <- function(host,path,referer,port=80)
 	repeat{
 		ss <- rawToChar(readBin(scon, "raw", 2048))
 		output <- paste(output,ss,sep="")
-		if(regexpr("\r\n0\r\n\r\n",ss)>-1) break()
-		if(ss == "") break()
-		#if(proc.time()[3] > start+timeout) break()
+		if(regexpr("\r\n0\r\n\r\n",ss)>-1) break
+		if(ss == "") break
 	}
 	close(scon)
 	return(output)
@@ -167,42 +165,40 @@ getToHost2 <- function(host,path,referer,port=80)
 ## Simple Post
 ##================================================================
 
-simplePostToHost<-function(host,path,referer,datatosend,port=80)
-  {
-    if(!missing(datatosend))
-      {
-        lengthdatatosend <- length( strsplit(datatosend,"")[[1]])
-        datatosend <- paste(datatosend,"\n",sep="")
-      }
-    else
-      {
-        datatosend<-character(0)
-        lengthdatatosend <- 0
-      }
-    if(missing(path)) path<-"/"
-    if(missing(referer)) referer <- ""
-    #make the header
-    header<-character(0)
-    header<-c(header,    paste("POST ",path," HTTP/1.1\n",sep=""))
-    header<-c(header,    paste("Host: ",host,"\n",sep=""))
-    header<-c(header,    paste("Referer: ",referer,"\n",sep=""))
-    header<-c(header,    "Content-Type: application/x-www-form-urlencoded\n")
-    header<-c(header,    paste("Content-Length: ",lengthdatatosend,"\n"))
-    header<-c(header,    "Connection: Keep-Alive\n\n")
-    #add the data.
-    header <- paste(c(header,datatosend), collapse="")
-    ##establish the connection.
-    fp <- make.socket(host=host, port=port,server=FALSE)
-    write.socket(fp,header)
-    output <- character(0)
-    #read as long there is nothing more to read.
-    repeat
-      {
-        ss <- read.socket(fp,loop=FALSE)
-        output <- paste(output,ss,sep="")
-        if(regexpr("\r\n0\r\n\r\n",ss)>-1) break();
-        if (ss == "") break();
-      }
-    close.socket(fp)
-    return(output)
-  }
+simplePostToHost <- function(host, path, datatosend, referer, contenttype,
+				port=80, maxlen=131063L) {
+	if(!missing(datatosend))
+		lengthdatatosend <- length(charToRaw(datatosend))
+	else {
+		datatosend<-character(0)
+		lengthdatatosend <- 0
+	}
+	if(missing(path)) path<-"/"
+	if(missing(referer)) referer <- ""
+	if(missing(contenttype))
+		contenttype <- "application/x-www-form-urlencoded"
+	#make the header
+	header<-character(0)
+	header<-c(header, paste("POST ", path, " HTTP/1.1\n", sep=""))
+	header<-c(header, paste("Host: ", host, "\n", sep=""))
+	header<-c(header, paste("Referer: ", referer, "\n", sep=""))
+	header<-c(header, paste("Content-Type: ", contenttype, "\n", sep=""))
+	header<-c(header, paste("Content-Length: ",
+				lengthdatatosend, "\n", sep=""))
+	header<-c(header, "Connection: Keep-Alive\n\n")
+	#add the data.
+	header <- paste(c(header,datatosend,"\n"), collapse="")
+	##establish the connection.
+	fp <- make.socket(host=host, port=port,server=FALSE)
+	write.socket(fp,header)
+	output <- character(0)
+	# read as long as maxlen bytes have been returned
+	repeat {
+		ss <- read.socket(fp, maxlen, loop=FALSE)
+		output <- paste(output, ss, sep="")
+		if (length(charToRaw(ss)) < maxlen) break
+		# if(regexpr("\r\n0\r\n\r\n", ss)>-1) break
+	}
+	close.socket(fp)
+	return(output)
+}
